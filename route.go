@@ -13,48 +13,6 @@ var (
 	students  []Student
 )
 
-// getSchools func to return all schools
-func getSchools(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json")
-	result, err := json.Marshal(&schools)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(`{"ERROR": "Error unmarshalling the schools array"}`))
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
-}
-
-// addSchool func to add new school
-func addSchool(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-type", "application/json")
-
-	var school School
-
-	if err := json.NewDecoder(r.Body).Decode(&school); err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"ERROR": "Error unmarshalling the school obj from request body"}`))
-	}
-
-	school.ID = len(schools) + 1
-	school.Teachers = nil
-	school.Parents = nil
-	school.Grades = nil
-	school.Students = nil
-
-	schools = append(schools, school)
-
-	result, err := json.Marshal(school)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(`{"ERROR": "Error unmarshalling the school obj from request body"}`))
-	}
-
-	w.WriteHeader(http.StatusOK)
-	w.Write(result)
-}
-
 // init func run when build is invoked
 func init() {
 	addresses = []Address{
